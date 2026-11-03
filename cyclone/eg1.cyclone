@@ -1,0 +1,38 @@
+option-trace=true;
+graph swap {
+    int a;
+    int b;
+    int t;
+
+    start node S0 {
+        t=a
+    }
+
+    normal node S1 {
+        a=b
+        b=t
+    }
+}
+
+/*
+ abstract: a pure node that contains no code blocks.
+ normal: a standard node/state that code blocks are allowed.
+ start: an entry node to your graph.
+ final: a final node of your graph.
+*/
+
+graph eg {
+    abstract start node S0{}
+    abstract final node S1{}
+    edge {S0 -> *}
+    edge {S1 -> *}
+
+    /*
+     Give me a path that:
+     1. It’s length is 3
+     2. Must contain a sub-path S0 -> S0
+    */
+    goal {
+        check for 3 condition (S0 -> S0)
+    }   
+}

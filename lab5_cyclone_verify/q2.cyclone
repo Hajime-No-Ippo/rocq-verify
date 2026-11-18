@@ -1,0 +1,30 @@
+    // [a>0 ∧ b>0]
+
+    // if (a>b)
+
+    //     c=a;
+
+    // else 
+
+    //     c=b;
+
+    // [c = max(a,b)]
+
+option-trace = true;
+graph ifElseMax {
+    int a where a > 0;
+    int b where b > 0;
+    int c;
+
+    normal start node S {}
+    normal node Then {c = a;}
+    normal node Else {c = b;}
+
+    edge { S -> Then where a > b; }
+    edge { S -> Else where a <= b; }
+
+    goal {
+        assert  (!( c >= a && c >= b && (c == a || c == b)) );
+        check for 1 reach (Then , Else)
+    }
+}

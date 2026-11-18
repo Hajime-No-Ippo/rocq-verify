@@ -1,0 +1,29 @@
+    // [x >=0]
+    // a = x;
+    // y = 0;
+    // while (a!=0){
+    //   y = y + 1;
+    //   a = a - 1;
+    // }
+    // [x = y]
+
+option-trace = true;
+graph LoopVerification {
+    int x where x >= 0;      // precondition
+    int a;
+    int y;
+
+    normal start node Init { a = x; y = 0; }
+    normal node Body       { y = y + 1; a = a - 1; }
+    normal final node Exit {}
+
+    edge { Init -> Body where a != 0; }   
+    edge { Init -> Exit where a == 0; }   
+    edge { Body -> Body where a != 0; }   
+    edge { Body -> Exit where a == 0; }   
+
+    goal {
+        assert !(x == y);                 
+        check for 1,2,3,4,5,6,7,8,9,10 reach (Exit)
+    }
+}

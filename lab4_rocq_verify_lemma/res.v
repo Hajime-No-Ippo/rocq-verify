@@ -4,7 +4,8 @@ Parameter R S T: D -> Prop.
 Lemma lemma1:
   (forall x : D, R x -> S x ) -> 
   (forall y : D, R y) -> 
-  (forall z : D, S z)
+  (forall z : D, S z).
+  
 Proof.
   intro.
   intro.
@@ -67,9 +68,18 @@ Proof.
 Qed.
 
 Lemma lemma6 :
-  (exists x : D, ~ R x) ->
+  ~(exists x : D, ~ R x) ->
   (forall y : D, ~~ R y).
-Proof:
+Proof.
+  red.
+  intro.
+  intro.
+  intro.
+  apply H.
+  exists y.
+  exact H0.
+Qed.
+
 
 Lemma lemma7 :
   (exists y : D, ~ R y) -> 

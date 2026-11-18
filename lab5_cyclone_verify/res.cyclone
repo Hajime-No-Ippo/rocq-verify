@@ -1,0 +1,125 @@
+/**
+ * CS357 Cyclone Lab
+ * Show that a Petersen graph is not 2-colorable but 3-colorable.
+ */
+
+//produce a trace to show color at each node.
+option-trace=true;
+graph PetersonGraphColor{
+	//the number of possible colors. Range: 0 - 2.
+	const int COLOR = 2;
+
+	/* 
+	 * The following where clauses make sure each node (in the graph) 
+	 * can only be colored using 1 of the 3 colors.
+	 */
+	int color_a where color_a>=0 && color_a<=COLOR;
+	int color_b where color_b>=0 && color_b<=COLOR;
+	int color_c where color_c>=0 && color_c<=COLOR;
+	int color_d where color_d>=0 && color_d<=COLOR;
+	int color_e where color_e>=0 && color_e<=COLOR;
+	int color_f where color_f>=0 && color_f<=COLOR;
+	int color_g where color_g>=0 && color_g<=COLOR;
+	int color_h where color_h>=0 && color_h<=COLOR;
+	int color_i where color_i>=0 && color_i<=COLOR;
+	int color_j where color_j>=0 && color_j<=COLOR;
+
+	normal start final node A{
+		// Constraint: the color for node A cannot be the same as the colors of node B,C,F.
+		color_a!=color_b && color_a!=color_c && color_a!=color_f; 
+	}
+	/* For each of the following node, the same type of constraint applies
+	 * that is the color of a particular node cannot be equal to  
+	 * the colors of its adjacent nodes. See the example above for node A.
+	 *
+	 * Now completes this specification.
+	 */
+	normal final node B{
+        color_b!=color_a && color_b!=color_d && color_b!=color_g; 
+    }
+	normal final node C{
+        color_c!=color_a && color_c!=color_e && color_c!=color_h; 
+    }
+	normal final node D{
+        color_d!=color_b && color_d!=color_i && color_d!=color_e; 
+    }
+	normal final node E{
+        color_e!=color_d && color_e!=color_c && color_e!=color_j; 
+    }
+	normal final node F{
+        color_f!=color_a && color_f!=color_i && color_f!=color_j; 
+    }
+	normal final node G{
+        color_g!=color_b && color_g!=color_h && color_g!=color_j; 
+    }
+	normal final node H{
+        color_h!=color_c && color_h!=color_g && color_h!=color_i; 
+    }
+	normal final node I{
+        color_i!=color_d && color_i!=color_f && color_i!=color_h; 
+    }
+	normal final node J{
+        color_j!=color_e && color_j!=color_g && color_j!=color_f; 
+    }
+
+	//outter structure
+	edge { A <-> B,C,F }
+	edge { B <-> A,G,D }
+	edge { D <-> B,I,E }
+	edge { E <-> D,J,C }
+	edge { C <-> A,H,E }
+	
+	//inner structure
+	edge { F <-> A,I,J }
+	edge { G <-> B,H,J }
+	edge { H <-> C,G,I }
+	edge { I <-> D,F,H }
+	edge { J <-> E,G,F }
+
+	goal{
+         check for 9 condition(A && B && C && D && E && F && G && H && I && J)
+	}
+
+}
+
+
+option-trace = true;
+graph ifElseMax {
+    int a where a > 0;
+    int b where b > 0;
+    int c;
+
+    normal start node S {}
+    normal node Then {c = a;}
+    normal node Else {c = b;}
+
+    edge { S -> Then where a > b; }
+    edge { S -> Else where a <= b; }
+
+    goal {
+        assert  (!( c >= a && c >= b && (c == a || c == b)) );
+        check for 1 reach (Then , Else)
+    }
+}
+
+
+option-trace = true;
+graph LoopVerification {
+    int x where x >= 0;      // precondition
+    int a;
+    int y;
+
+    normal start node Init { a = x; y = 0; }
+    normal node Body       { y = y + 1; a = a - 1; }
+    normal final node Exit {}
+
+    edge { Init -> Body where a != 0; }   
+    edge { Init -> Exit where a == 0; }   
+    edge { Body -> Body where a != 0; }   
+    edge { Body -> Exit where a == 0; }   
+
+    goal {
+        assert !(x == y);                 
+        check for 1,2,3,4,5,6,7,8,9,10 reach (Exit)
+    }
+}
